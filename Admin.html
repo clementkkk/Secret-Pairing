@@ -4,37 +4,49 @@
 <title>Admin Dashboard</title>
 <style>
 body { font-family:Arial; background:#fafafa; padding:20px; }
-table {
-  border-collapse:collapse; width:100%;
-  margin-bottom:30px;
-}
-th, td {
-  border:1px solid #ccc;
-  padding:8px; text-align:left;
-}
+table { border-collapse:collapse; width:100%; margin-bottom:30px; }
+th, td { border:1px solid #ccc; padding:8px; }
 th { background:#b30000; color:white; }
 </style>
 </head>
 <body>
 
 <h2>👥 Waiting Pool</h2>
-<table>
-<tr><th>Name</th><th>Phone</th></tr>
-{% for p in waiting %}
-<tr><td>{{p.name}}</td><td>{{p.phone}}</td></tr>
-{% endfor %}
+<table id="waitingTable">
+<tr><th>Name</th><th>Gender</th><th>Phone</th></tr>
 </table>
 
 <h2>🎁 Pairings</h2>
-<table>
-<tr><th>Person A</th><th>Person B</th></tr>
-{% for a,b in pairs %}
-<tr>
-  <td>{{a.name}}</td>
-  <td>{{b.name}}</td>
-</tr>
-{% endfor %}
+<table id="pairsTable">
+<tr><th>Person A</th><th>Gender</th><th>Person B</th><th>Gender</th></tr>
 </table>
+
+<script>
+function loadData(){
+  fetch("/data")
+    .then(r=>r.json())
+    .then(d=>{
+      const w = document.getElementById("waitingTable");
+      const p = document.getElementById("pairsTable");
+
+      w.innerHTML = "<tr><th>Name</th><th>Gender</th><th>Phone</th></tr>";
+      d.waiting.forEach(x=>{
+        w.innerHTML += `<tr><td>${x.name}</td><td>${x.gender}</td><td>${x.phone}</td></tr>`;
+      });
+
+      p.innerHTML = "<tr><th>Person A</th><th>Gender</th><th>Person B</th><th>Gender</th></tr>";
+      d.pairs.forEach(x=>{
+        p.innerHTML += `<tr>
+          <td>${x[0].name}</td><td>${x[0].gender}</td>
+          <td>${x[1].name}</td><td>${x[1].gender}</td>
+        </tr>`;
+      });
+    });
+}
+
+loadData();
+setInterval(loadData, 5000);
+</script>
 
 </body>
 </html>
