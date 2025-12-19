@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin Dashboard</title>
+<style>
+body { font-family:Arial; background:#fafafa; padding:20px; }
+table {
+  border-collapse:collapse; width:100%;
+  margin-bottom:30px;
+}
+th, td {
+  border:1px solid #ccc;
+  padding:8px; text-align:left;
+}
+th { background:#b30000; color:white; }
+</style>
+</head>
+<body>
+
+<h2>👥 Waiting Pool</h2>
+<table>
+<tr><th>Name</th><th>Phone</th></tr>
+{% for p in waiting %}
+<tr><td>{{p.name}}</td><td>{{p.phone}}</td></tr>
+{% endfor %}
+</table>
+
+<h2>🎁 Pairings</h2>
+<table>
+<tr><th>Person A</th><th>Person B</th></tr>
+{% for a,b in pairs %}
+<tr>
+  <td>{{a.name}}</td>
+  <td>{{b.name}}</td>
+</tr>
+{% endfor %}
+</table>
+
+</body>
+</html>
