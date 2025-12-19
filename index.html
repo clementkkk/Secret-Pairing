@@ -2,72 +2,53 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🎄 Christmas Secret Pairing</title>
+<title>🎄 Secret Pairing</title>
 <style>
-body { font-family:'Poppins',sans-serif; margin:0; background:#fff; color:#333; }
-.container { max-width:420px; margin:10vh auto; padding:20px; background:#f9f9f9; border-radius:18px; box-shadow:0 0 15px rgba(0,0,0,0.15); text-align:center; }
-.logo { width:90px; margin-bottom:10px; }
-h1.main { color:#b30000; font-size:20px; margin:5px 0; }
-h2.sub { color:#ff1a1a; margin:5px 0; }
-p.description { font-size:14px; color:#555; }
-input { width:90%; padding:10px; margin:8px 0; border-radius:8px; border:1px solid #ccc; outline:none; font-size:14px; }
-button { width:90%; padding:12px; margin-top:10px; border-radius:10px; border:none; cursor:pointer; background:linear-gradient(135deg,#b30000,#ff1a1a); color:white; font-size:16px; font-weight:600; }
-button:hover { transform: translateY(-2px); box-shadow:0 0 12px rgba(255,50,50,0.3); }
-#status { margin-top:10px; font-size:14px; color:#b30000; }
-.footer { margin-top:15px; font-size:12px; color:#555; }
+body { font-family:Poppins,sans-serif; background:#f4f4f4; }
+.container {
+  max-width:420px; margin:10vh auto; padding:20px;
+  background:white; border-radius:16px;
+  box-shadow:0 0 15px rgba(0,0,0,0.15);
+  text-align:center;
+}
+input, button {
+  width:90%; padding:10px; margin:8px 0;
+  border-radius:8px; border:1px solid #ccc;
+}
+button {
+  background:#b30000; color:white;
+  font-size:16px; cursor:pointer;
+}
+#status { margin-top:10px; color:#b30000; }
 </style>
 </head>
 <body>
 
 <div class="container">
-    <img src="ag logo.png" alt="Assemblies of God Logo" class="logo">
-    <h1 class="main">OliveHill Assemblies of God Youth Ministry</h1>
-    <h2 class="sub">🎄 Secret Pairing</h2>
-    <p class="description">Christmas Dinner Night Edition</p>
+  <h2>🎄 Christmas Secret Pairing</h2>
+  <p>OliveHill AG Youth Ministry</p>
 
-    <input id="name" placeholder="Your Name">
-    <input id="phone" placeholder="WhatsApp Number" value="+233 " oninput="formatPhone()">
+  <input id="name" placeholder="Your Name">
+  <input id="phone" placeholder="WhatsApp Number (024xxxxxxx)">
 
-    <button onclick="join()">Join Event</button>
-
-    <div id="status">Enter your details and click Join</div>
-    <div class="footer">✨ Pairing starts when 8 people join</div>
+  <button onclick="join()">Join Event</button>
+  <div id="status">Enter details to join</div>
 </div>
 
 <script>
-function formatPhone() {
-    let phoneInput = document.getElementById("phone");
-    if(!phoneInput.value.startsWith("+233 ")) {
-        phoneInput.value = "+233 " + phoneInput.value.replace(/[^0-9]/g,'').replace(/^0+/,'');
-    }
-}
-
-function join() {
-    const status = document.getElementById("status");
-    const name = document.getElementById("name").value.trim();
-    const phone = document.getElementById("phone").value.trim();
-
-    if(!name || !phone){
-        status.textContent = "⚠️ Please enter both name and WhatsApp number.";
-        return;
-    }
-
-    status.textContent = "🔄 Processing... Please wait.";
-
-    fetch("http://127.0.0.1:5000/join", {
-        method:"POST",
-        headers: {"Content-Type":"application/json"},
-        body: JSON.stringify({name, phone})
+function join(){
+  fetch("/join",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({
+      name:document.getElementById("name").value,
+      phone:document.getElementById("phone").value
     })
-    .then(res=>res.json())
-    .then(data=>{
-        status.textContent = data.message;
-    })
-    .catch(err=>{
-        status.textContent = "⚠️ Cannot connect to server. Try again.";
-        console.error(err);
-    });
+  })
+  .then(r=>r.json())
+  .then(d=>{
+    document.getElementById("status").innerText = d.message;
+  });
 }
 </script>
 
