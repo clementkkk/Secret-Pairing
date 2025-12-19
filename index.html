@@ -2,37 +2,46 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>🎄 Secret Pairing</title>
+<title>🎄 Christmas Secret Pairing</title>
 <style>
 body { font-family:Poppins,sans-serif; background:#f4f4f4; }
 .container {
   max-width:420px; margin:10vh auto; padding:20px;
-  background:white; border-radius:16px;
+  background:#fff; border-radius:16px;
   box-shadow:0 0 15px rgba(0,0,0,0.15);
   text-align:center;
 }
-input, button {
+input, select, button {
   width:90%; padding:10px; margin:8px 0;
   border-radius:8px; border:1px solid #ccc;
 }
-button {
-  background:#b30000; color:white;
-  font-size:16px; cursor:pointer;
-}
-#status { margin-top:10px; color:#b30000; }
+button { background:#b30000; color:white; font-size:16px; cursor:pointer; }
+#status { color:#b30000; margin-top:10px; }
 </style>
 </head>
 <body>
 
-<div class="container">
+<div class="container" id="formBox">
   <h2>🎄 Christmas Secret Pairing</h2>
-  <p>OliveHill AG Youth Ministry</p>
+  <p>OliveHill Assemblies of God Youth Ministry</p>
 
   <input id="name" placeholder="Your Name">
-  <input id="phone" placeholder="WhatsApp Number (024xxxxxxx)">
 
+  <select id="gender">
+    <option value="">Select Gender</option>
+    <option value="male">Male</option>
+    <option value="female">Female</option>
+  </select>
+
+  <input id="phone" placeholder="WhatsApp Number (024xxxxxxx)">
   <button onclick="join()">Join Event</button>
-  <div id="status">Enter details to join</div>
+  <div id="status">Enter your details to join</div>
+</div>
+
+<div class="container" id="successBox" style="display:none;">
+  <h2>🎉 Congratulations!</h2>
+  <p id="successMsg"></p>
+  <p>Please wait patiently while pairing is completed.</p>
 </div>
 
 <script>
@@ -42,12 +51,19 @@ function join(){
     headers:{"Content-Type":"application/json"},
     body:JSON.stringify({
       name:document.getElementById("name").value,
-      phone:document.getElementById("phone").value
+      phone:document.getElementById("phone").value,
+      gender:document.getElementById("gender").value
     })
   })
   .then(r=>r.json())
   .then(d=>{
-    document.getElementById("status").innerText = d.message;
+    if(d.success){
+      document.getElementById("formBox").style.display="none";
+      document.getElementById("successBox").style.display="block";
+      document.getElementById("successMsg").innerText=d.message;
+    } else {
+      document.getElementById("status").innerText=d.message;
+    }
   });
 }
 </script>
